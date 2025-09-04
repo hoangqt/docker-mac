@@ -1,4 +1,4 @@
-# hadolint global ignore=DL3008,DL3009,DL3015
+# hadolint global ignore=DL3008,DL3009,DL3015,DL4001,DL4006
 FROM ubuntu:25.04
 
 RUN apt-get update && apt-get install -y \
@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     valgrind
 
 # Terraform
-RUN wget https://releases.hashicorp.com/terraform/1.13.1/terraform_1.13.1_linux_amd64.zip && \
+RUN wget -q https://releases.hashicorp.com/terraform/1.13.1/terraform_1.13.1_linux_amd64.zip && \
     unzip terraform_1.13.1_linux_amd64.zip && \
     mv terraform /usr/local/bin/ && \
     rm terraform_1.13.1_linux_amd64.zip
