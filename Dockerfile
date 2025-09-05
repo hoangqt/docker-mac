@@ -1,5 +1,8 @@
-# hadolint global ignore=DL3008,DL3009,DL3015,DL4001,DL4006
-FROM ubuntu:25.04
+FROM ubuntu:25.04 AS base
+
+LABEL maintainer="Hoang Tran"
+LABEL description="Base OS with essential tools"
+LABEL stage="base"
 
 RUN apt-get update && apt-get install -y \
     gdb \
@@ -22,6 +25,11 @@ RUN apt-get update && apt-get install -y \
     curl \
     valgrind
 
+FROM base AS development
+
+LABEL description="Development environment"
+LABEL stage="dev"
+
 # Terraform
 RUN wget -q https://releases.hashicorp.com/terraform/1.13.1/terraform_1.13.1_linux_amd64.zip && \
     unzip terraform_1.13.1_linux_amd64.zip && \
@@ -36,3 +44,29 @@ RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
     tee /etc/apt/sources.list.d/kubernetes.list && \
     chmod 644 /etc/apt/sources.list.d/kubernetes.list && \
     apt-get update && apt-get install -y kubectl
+
+RUN apt-get update && apt-get install -y \
+    openjdk-17-jdk \
+    golang-go \
+    rustup \
+    ruby \
+    lua5.4 \
+    bazel-bootstrap
+
+# Astral uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+# Rust stable toolchain
+RUN rustup toolchain install stable --profile minimal \
+    && rustup default stable
+
+# Install SDKMAN and Groovy
+RUN curl -s "https://get.sdkman.io" | bash \
+    && bash -c "source ~/.sdkman/bin/sdkman-init.sh && sdk install groovy"
+
+# hadolint global ignore=SC2016
+RUN echo 'export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"' >> ~/.bashrc \
+    && echo 'source ~/.sdkman/bin/sdkman-init.sh' >> ~/.bashrc
