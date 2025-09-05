@@ -45,19 +45,20 @@ RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
     chmod 644 /etc/apt/sources.list.d/kubernetes.list && \
     apt-get update && apt-get install -y kubectl
 
+# Nodejs repo
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
     golang-go \
     rustup \
     ruby \
     lua5.4 \
-    bazel-bootstrap
+    bazel-bootstrap \
+    nodejs
 
 # Astral uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Nodejs
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 
 # Rust stable toolchain
 RUN rustup toolchain install stable --profile minimal \
