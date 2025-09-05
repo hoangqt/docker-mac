@@ -1,6 +1,9 @@
 ---
 name: Development docker image CI
 
+env:
+  TAG_NAME: docker-mac
+
 on:
   push:
     branches:
@@ -35,4 +38,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: hoangqt/docker-mac:latest
+          tags: hoangqt/${{ env.TAG_NAME }}:latest
