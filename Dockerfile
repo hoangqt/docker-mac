@@ -71,3 +71,7 @@ RUN curl -s "https://get.sdkman.io" | bash \
 # hadolint global ignore=SC2016
 RUN echo 'export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"' >> ~/.bashrc \
     && echo 'source ~/.sdkman/bin/sdkman-init.sh' >> ~/.bashrc
+
+FROM development AS databases
+
+RUN curl https://clickhouse.com/ | sh

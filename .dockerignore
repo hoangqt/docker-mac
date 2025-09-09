@@ -1,0 +1,5 @@
+.pre-commit-config.yaml
+.hadolint.yaml
+.gitignore
+veneza.png
+Makefile
