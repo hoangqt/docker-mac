@@ -23,7 +23,23 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
-    valgrind
+    valgrind \
+    logrotate \
+    network-manager \
+    lvm2 \
+    nfs-common \
+    iputils-ping \
+    traceroute \
+    dnsutils \
+    mtr \
+    firewalld \
+    tcpdump \
+    htop \
+    iotop \
+    iftop \
+    nethogs \
+    sysstat \
+    dmidecode
 
 FROM base AS development
 
