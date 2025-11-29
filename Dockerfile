@@ -39,7 +39,9 @@ RUN apt-get update && apt-get install -y \
     iftop \
     nethogs \
     sysstat \
-    dmidecode
+    dmidecode \
+    lsof \
+    psmisc
 
 FROM base AS development
 
