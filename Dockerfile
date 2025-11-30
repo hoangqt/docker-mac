@@ -41,7 +41,10 @@ RUN apt-get update && apt-get install -y \
     sysstat \
     dmidecode \
     lsof \
-    psmisc
+    psmisc \
+    ldnsutils \
+    acl
+
 
 FROM base AS development
 
