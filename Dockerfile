@@ -1,8 +1,11 @@
-FROM ubuntu:25.04 AS base
+FROM ubuntu:24.04 AS base
 
 LABEL maintainer="Hoang Tran"
 LABEL description="Base OS with essential tools"
 LABEL stage="base"
+
+# Restore man pages that are removed in minimal Ubuntu image
+RUN yes | unminimize
 
 RUN apt-get update && apt-get install -y \
     gdb \
@@ -43,7 +46,13 @@ RUN apt-get update && apt-get install -y \
     lsof \
     psmisc \
     ldnsutils \
-    acl
+    acl \
+    man \
+    man-db \
+    manpages \
+    manpages-dev \
+    manpages-posix \
+    && mandb
 
 
 FROM base AS development
@@ -72,7 +81,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
     golang-go \
-    rustup \
     ruby \
     lua5.4 \
     bazel-bootstrap \
@@ -81,9 +89,14 @@ RUN apt-get update && apt-get install -y \
 # Astral uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Rust stable toolchain
-RUN rustup toolchain install stable --profile minimal \
-    && rustup default stable
+# Install Rust
+# hadolint ignore=SC1091
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
+    . "$HOME/.cargo/env" && \
+    rustup default stable && \
+    ln -s "$HOME/.cargo/bin/rustup" /usr/local/bin/rustup && \
+    ln -s "$HOME/.cargo/bin/rustc" /usr/local/bin/rustc && \
+    ln -s "$HOME/.cargo/bin/cargo" /usr/local/bin/cargo
 
 # Install SDKMAN and Groovy
 RUN curl -s "https://get.sdkman.io" | bash \
